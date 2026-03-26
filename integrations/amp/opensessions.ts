@@ -16,11 +16,26 @@
 
 // @i-know-the-amp-plugin-api-is-wip-and-very-experimental-right-now
 import type { PluginAPI } from "@ampcode/plugin";
-import { appendFileSync } from "fs";
+import { appendFileSync, readdirSync, statSync } from "fs";
 
 const SERVER_URL = process.env.OPENSESSIONS_URL ?? "http://127.0.0.1:7391/event";
 const EVENTS_FILE = process.env.OPENSESSIONS_EVENTS_FILE ?? "/tmp/opensessions-events.jsonl";
 const THREADS_DIR = `${process.env.HOME}/.local/share/amp/threads`;
+const STALE_MS = 10 * 60 * 1000;
+
+function getThreadId(): string | null {
+  try {
+    const now = Date.now();
+    const files = readdirSync(THREADS_DIR)
+      .filter(f => f.startsWith("T-") && f.endsWith(".json"))
+      .map(f => ({ name: f, mtime: statSync(`${THREADS_DIR}/${f}`).mtimeMs }))
+      .filter(f => now - f.mtime < STALE_MS)
+      .sort((a, b) => b.mtime - a.mtime);
+    return files[0]?.name.replace(".json", "") ?? null;
+  } catch {
+    return null;
+  }
+}
 
 async function getTmuxSession($: PluginAPI["$"]): Promise<string> {
   try {
@@ -46,7 +61,8 @@ async function writeEvent(agent: string, session: string, status: string, thread
 
 async function readThreadName($: PluginAPI["$"], threadId: string): Promise<string | null> {
   try {
-    const result = await $`jq -r '.title // empty' ${THREADS_DIR}/${threadId}.json`;
+    const path = `${THREADS_DIR}/${threadId}.json`;
+    const result = await $`jq -r '.title // empty' ${path}`;
     const title = result.stdout.trim();
     return title || null;
   } catch {
@@ -77,21 +93,15 @@ export default function (amp: PluginAPI) {
 
   amp.on("agent.start", async (_event, ctx) => {
     if (!sessionName) sessionName = await getTmuxSession(ctx.$);
-    // Debug: dump thread object to find the right property
-    const threadObj = ctx.thread;
-    ctx.logger.log(`[opensessions] ctx.thread = ${JSON.stringify(threadObj, null, 2)}`);
-    ctx.logger.log(`[opensessions] ctx.thread keys = ${threadObj ? Object.keys(threadObj) : 'null'}`);
-    const threadId = ctx.thread?.id?.toString() ?? null;
-    ctx.logger.log(`[opensessions] threadId = ${threadId}`);
+    const threadId = getThreadId();
     const threadName = await resolveThreadName(ctx.$, threadId);
-    ctx.logger.log(`[opensessions] threadName = ${threadName}`);
     await writeEvent("amp", sessionName, "running", threadId ?? undefined, threadName ?? undefined);
     return {};
   });
 
   amp.on("agent.end", async (event, ctx) => {
     if (!sessionName) sessionName = await getTmuxSession(ctx.$);
-    const threadId = ctx.thread?.id?.toString() ?? null;
+    const threadId = getThreadId();
     const threadName = await resolveThreadName(ctx.$, threadId);
     await writeEvent("amp", sessionName, event.status, threadId ?? undefined, threadName ?? undefined);
     return undefined;
@@ -99,7 +109,7 @@ export default function (amp: PluginAPI) {
 
   amp.on("tool.call", async (_event, ctx) => {
     if (!sessionName) return { action: "allow" as const };
-    const threadId = ctx.thread?.id?.toString() ?? null;
+    const threadId = getThreadId();
     const threadName = await resolveThreadName(ctx.$, threadId);
     await writeEvent("amp", sessionName, "running", threadId ?? undefined, threadName ?? undefined);
     return { action: "allow" as const };
@@ -107,7 +117,7 @@ export default function (amp: PluginAPI) {
 
   amp.on("tool.result", async (event, ctx) => {
     if (!sessionName) return;
-    const threadId = ctx.thread?.id?.toString() ?? null;
+    const threadId = getThreadId();
     const threadName = await resolveThreadName(ctx.$, threadId);
     if (event.status === "error") {
       await writeEvent("amp", sessionName, "error", threadId ?? undefined, threadName ?? undefined);

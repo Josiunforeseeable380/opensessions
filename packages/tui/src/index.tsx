@@ -544,15 +544,10 @@ function buildSparkline(timestamps: number[], width: number, windowMs: number = 
     buckets[idx]++;
   }
 
-  // Skip if too few buckets have data (would look like random floating blocks)
-  const activeBuckets = buckets.filter((c: number) => c > 0).length;
-  if (activeBuckets < 3) return "";
-
   const max = Math.max(...buckets, 1);
   return buckets.map((count: number) => {
-    if (count === 0) return "▁";
     const level = Math.round((count / max) * (SPARK_BLOCKS.length - 1));
-    return SPARK_BLOCKS[Math.max(1, level)];
+    return SPARK_BLOCKS[level];
   }).join("");
 }
 
@@ -572,17 +567,20 @@ function DetailPanel(props: DetailPanelProps) {
   const agents = () => props.session.agents ?? [];
   const hasAgents = () => agents().length > 0;
 
+  const sparkline = () => buildSparkline(props.session.eventTimestamps ?? [], 20);
+  const hasActivity = () => (props.session.eventTimestamps ?? []).length >= 3;
+
   const truncDir = () => {
     const d = props.session.dir;
     if (!d) return "";
     const home = process.env.HOME ?? "";
     const short = home && d.startsWith(home) ? "~" + d.slice(home.length) : d;
-    return short.length > 22 ? "…" + short.slice(short.length - 21) : short;
+    return short.length > 24 ? "…" + short.slice(short.length - 23) : short;
   };
 
   const truncThread = (name?: string) => {
     if (!name) return "";
-    return name.length > 16 ? name.slice(0, 15) + "…" : name;
+    return name.length > 20 ? name.slice(0, 19) + "…" : name;
   };
 
   return (
@@ -609,8 +607,8 @@ function DetailPanel(props: DetailPanelProps) {
             const color = () => SC()[agent.status];
             return (
               <text truncate>
-                <span style={{ fg: color() }}>{"  "}{icon()}</span>
-                <span style={{ fg: P().overlay0 }}>{" "}{agent.agent}</span>
+                <span style={{ fg: P().overlay0 }}>{"  "}{agent.agent}</span>
+                <span style={{ fg: color() }}>{" "}{icon()}</span>
                 {agent.threadName
                   ? <span style={{ fg: P().subtext0, attributes: DIM }}>{" "}{truncThread(agent.threadName)}</span>
                   : ""}
@@ -618,6 +616,13 @@ function DetailPanel(props: DetailPanelProps) {
             );
           }}
         </For>
+      </Show>
+
+      {/* Sparkline — activity over last 30m */}
+      <Show when={hasActivity()}>
+        <text truncate>
+          <span style={{ fg: P().lavender, attributes: DIM }}>{"  "}{sparkline()}</span>
+        </text>
       </Show>
     </box>
   );
