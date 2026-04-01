@@ -43,10 +43,18 @@ curl -s -o /dev/null -X POST "http://${HOST}:${PORT}/shutdown" 2>/dev/null || tr
 echo "  ✓ stopped server (if running)"
 
 # --- Remove keybindings ---
-# Command table bindings
+# Command table bindings (opensessions key table)
 PREFIX_KEY=$(tmux show-option -gqv "@opensessions-prefix-key" 2>/dev/null)
 PREFIX_KEY="${PREFIX_KEY:-o}"
 tmux unbind-key "$PREFIX_KEY" 2>/dev/null || true
+
+# Unbind all keys in the opensessions command table
+tmux unbind-key -T opensessions s 2>/dev/null || true
+tmux unbind-key -T opensessions t 2>/dev/null || true
+for i in 1 2 3 4 5 6 7 8 9; do
+  tmux unbind-key -T opensessions "$i" 2>/dev/null || true
+done
+tmux unbind-key -T opensessions Any 2>/dev/null || true
 
 # Direct prefix bindings
 tmux unbind-key C-s 2>/dev/null || true
